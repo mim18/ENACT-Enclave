@@ -1,0 +1,29 @@
+-- Find all the children of an ingredient - this example is acetaminephen
+select distinct ancestor_desc, ancestor_concept_cd, ancestor_level from tc_act_med_alpha_v41 where ancestor_level = 7 order by ancestor_desc; -- list ingredients
+select ancestor_desc, ancestor_concept_cd, desc_concept_cd, descendant_desc from tc_act_med_alpha_v41 
+where ancestor_concept_cd = 'RXNORM:161' and desc_concept_cd like 'RXNORM:%'
+order by descendant_desc; 
+
+--Count concepts by terminology type in a reference table - This example NDCs in medications
+--(NDC:, RXNORM:, ICD10CM:, ICD9CM:, ICD10PCS:, ICD9PROC:, LOINC:, CPT4:, HCPCS:, CVX:)
+select count(*) from tc_act_med_alpha_v41 where ancestor_level = 10 and ancestor_concept_cd like 'NDC:%'; --972000 all NDC
+
+--diagnosis
+-- find (string search) a diagnosis
+--asthma
+select distinct ancestor_desc, ancestor_concept_cd
+from tc_act_icd10cm_dx_v41
+where lower(ancestor_desc) like '%asthma%' 
+order by ancestor_desc; 
+
+-- find all children of J45 Asthma
+select ancestor_desc, ancestor_concept_cd, desc_concept_cd, descendant_desc 
+from tc_act_icd10cm_dx_v41
+where ancestor_concept_cd = 'ICD10CM:J45' 
+order by descendant_desc;
+
+-- find all children of C50 Breast Cancer
+select ancestor_desc, ancestor_concept_cd, desc_concept_cd, descendant_desc 
+from tc_act_icd10cm_dx_v41
+where ancestor_concept_cd = 'ICD10CM:C50' 
+order by descendant_desc; 
