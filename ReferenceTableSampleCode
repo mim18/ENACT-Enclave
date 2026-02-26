@@ -34,8 +34,41 @@ from tc_act_icd10cm_dx_v41
 where desc_concept_cd = 'ICD10CM:C50' 
 order by ancestor_path;
 
--- find all parents of lab LOINC:49909-5
+-- find all parents of lab LOINC:49909-5 interleukin
 select  ancestor_desc, ancestor_concept_cd, desc_concept_cd, descendant_desc
 from tc_act_loinc_lab_prov_v41
 where desc_concept_cd = 'LOINC:49909-5' 
 order by ancestor_path;
+
+
+-- find all parents of lab LOINC:4548-4 Hemoglobin A1C
+select  ancestor_desc, ancestor_concept_cd, desc_concept_cd, descendant_desc
+from tc_act_loinc_lab_prov_v41
+where desc_concept_cd = 'LOINC:4548-4' 
+order by ancestor_path;
+
+--find all HbA1C measures LOINC:LP16413-4 using the parent of a specific loinc from the previous query
+select ancestor_desc, ancestor_concept_cd, desc_concept_cd, descendant_desc 
+from tc_act_loinc_lab_prov_v41
+where ancestor_concept_cd = 'LOINC:LP16413-4' 
+order by descendant_path;
+
+-- find all parents of medication ingredient semaglutide
+select  ancestor_desc,  ancestor_concept_cd, desc_concept_cd, descendant_desc, ancestor_path
+from tc_act_med_va_v41
+where desc_concept_cd = 'RXNORM:1991302' 
+order by ancestor_path;
+
+-- find all children of medication class Hypoglycemic Agents,Other (HS509)
+select  ancestor_desc,  ancestor_concept_cd, desc_concept_cd, descendant_desc, descendant_path
+from tc_act_med_va_v41
+where ancestor_concept_cd = 'VANDF:HS509' 
+order by descendant_path;
+
+
+-- find first level children of medication class Hypoglycemic Agents,Other (HS509) - in this case the first level would be ingredients
+-- if you are higher up in the classification tree the first level children may be other classifications
+select  ancestor_desc,  ancestor_concept_cd, desc_concept_cd, descendant_desc, descendant_path, REGEXP_COUNT(descendant_path, '\\') as c_hlevel
+from tc_act_med_va_v41
+where ancestor_concept_cd = 'VANDF:HS509' and REGEXP_COUNT(descendant_path, '\\') = 10
+order by descendant_path;
