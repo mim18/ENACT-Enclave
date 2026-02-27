@@ -72,3 +72,22 @@ select  ancestor_desc,  ancestor_concept_cd, desc_concept_cd, descendant_desc, d
 from tc_act_med_va_v41
 where ancestor_concept_cd = 'VANDF:HS509' and REGEXP_COUNT(descendant_path, '\\') = 10
 order by descendant_path;
+
+--find the ingredients
+select distinct ancestor_desc, ancestor_concept_cd,  REGEXP_COUNT(ancestor_path, '\\')
+from tc_act_med_alpha_v41
+where  (lower(ancestor_desc) like 'benralizumab%'
+    or lower(ancestor_desc) like 'dupilumab%'
+    or lower(ancestor_desc) like 'omalizumab %'
+    or lower(ancestor_desc) like 'reslizumab %'
+    or lower(ancestor_desc) like 'mepolizumab %'
+    or lower(ancestor_desc) like 'tezepelumab %'
+    )
+    and REGEXP_COUNT(ancestor_path, '\\') = 8 -- ingredient levelin the medication_alpha ontology
+order by ancestor_desc;
+
+--find all the children of the ingredient including RXNORM, NDC and HCPCS (using the codes from the find the ingredients query)
+select  ancestor_desc,  ancestor_concept_cd, desc_concept_cd, descendant_desc, descendant_path
+from tc_act_med_alpha_v41
+where ancestor_concept_cd in  ('RXNORM:1989100','RXNORM:1876376', 'RXNORM:1720597','RXNORM:302379','RXNORM:1746889','RXNORM:2587789')
+order by descendant_path;
