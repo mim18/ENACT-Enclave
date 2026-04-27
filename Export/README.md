@@ -9,6 +9,6 @@ Instructions
 	- Substitute <schema_name> to your schema name.
 	- Edit your database url
     - Substitute '<SITE_NAME> to your site name
-7. Use the patient_set number as a parameter to the export script
+7. Use the patient_set number as a parameter to the export script. The output should include 9 files.
 	- python ExportEnclaveEHRMSSQL.py username password projectname exportnumber patientsetnumber
 
