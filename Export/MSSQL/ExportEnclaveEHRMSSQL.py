@@ -1,6 +1,5 @@
 import pandas as pd
 from io import StringIO
-import cx_Oracle
 import datetime
 import os
 import sys
